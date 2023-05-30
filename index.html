@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>IBM Cloud Function Demo</title>
-  
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
+    html {
+      background-color: #ededed;
+    }
+
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
       margin: 20px;
+      background-color: #ededed;
+
     }
 
     h1 {
@@ -41,7 +47,6 @@
     }
 
     .submit-button {
-      margin-left: 32px;
       display: flex;
       align-items: center;
     }
@@ -57,8 +62,8 @@
       padding: 22px;
     }
 
-    #copyButton {
-      margin: 21px;
+    #copyButton,
+    #closeButton {
       border-radius: 12px;
     }
 
@@ -79,127 +84,163 @@
 
     .btn-primary {
       color: #fff;
-      background-color: #007bff;
-      border-color: #007bff;
+      background-color: #33BCE5;
+      border-color: #33BCE5;
       border-radius: 10px;
-      margin-top: 81px;
+    }
+
+    .btn-primary:hover {
+      background-color: #1c88a9;
+      border-color: #1c88a9;
+    }
+
+    .img-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+
+    }
+
+    .guided-logo {
+      height: 65px;
+      width: 100px;
+      mix-blend-mode: multiply;
     }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-  <h1>Watson Assistant SideCar</h1>
-  <div class="body_container">
+  <div class="d-flex justify-content-center flex-column align-items-center">
+    <img class="guided-logo" src="/GuidedAI.png" alt="GuidedAI Logo" style="max-width: 150px;; max-height: 150px;">
+    <h3 class="mt-2 font-weight-bold">Watson Assistant SideCar</h3>
+  </div>
+  <div class="body_container shadow bg-light px-5" style="border-radius: 50px;">
     <form id="myForm">
       <div class="form-container">
         <label for="question">Insert your question or text to process and select enter</label>
-        <div class="container_text_button">
-          <textarea id="question" name="question" required></textarea>
-          <div class="submit-button">
-            <input type="submit" value="ENTER" class="btn btn-primary">
+        <div class="container_text_button d-flex w-100
+        flex-column justify-content-start align-items-start">
+          <div class="w-100">
+            <textarea id="question" class="w-100" name="question" required></textarea>
+          </div>
+          <div class="submit-button w-100 justify-content-start mt-2">
+            <input type="submit" value="ENTER" class="btn btn-primary w-100 ml-2">
           </div>
         </div>
       </div>
     </form>
-    <div class="second_container">
+    <div class="second_container d-flex w-100
+        flex-column justify-content-start align-items-start">
       <label for="result">Result:</label>
-      <textarea id="result" readonly placeholder="Press Enter to get the result"></textarea>
+      <div class="w-100">
+        <textarea id="result" class="w-100" readonly placeholder="Press Enter to get the result"></textarea>
+      </div>
+      <div class="w-100 d-flex justify-content-center">
+        <button id="copyButton" class="btn btn-primary w-25 mr-2">Copy Result</button>
+        <button id="closeButton" class="btn btn-primary w-25">Close</button>
+      </div>
     </div>
-    <button id="copyButton" class="btn btn-secondary">Copy Result</button>
-    <button id="closeButton" class="btn btn-secondary">Close</button>  
-    
   </div>
 
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-  // Handle form submission
-  $('#myForm').submit(function(event) {
-    
-    event.preventDefault(); // Prevent form submission
-    
-    // Get the value from the input field
-    var question = $('#question').val();
-    var qualifier = getUrlParameter('qualifier');
-    console.log('Qualifier = '+qualifier);
-    
-    // Display the "Fetching result..." placeholder
-    $('#result').attr('placeholder', 'Fetching result...');
+      // Handle form submission
+      $('#myForm').submit(function (event) {
 
-    // Make the AJAX request to the IBM Cloud Function
-    $.ajax({
-      url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2/my-function',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({ question: question, qualifier: qualifier }),
-      success: function(response) {
-        // Log the complete JSON response in the console
-        console.log(response);
+        event.preventDefault(); // Prevent form submission
 
-        // Extract the exact answer from the JSON response
-        var answer = response.message.replace(/.*\n\n/, '');
+        // Get the value from the input field
+        var question = $('#question').val();
+        var qualifier = getUrlParameter('qualifier');
+        console.log('Qualifier = ' + qualifier +' '+question);
 
-        // Display the answer in the text area
-        $('#result').val(answer);
-      },
-      error: function(xhr, textStatus, errorThrown) {
-        console.error('Error:', errorThrown);
-      }
+        // Display the "Fetching result..." placeholder
+        $('#result').attr('placeholder','Fetching result...');
+
+        // Make the AJAX request to the IBM Cloud Function
+        $.ajax({
+          url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2/my-function',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ question: question,qualifier: qualifier }),
+          success: function (response) {
+            // Log the complete JSON response in the console
+            console.log(response);
+
+            // Extract the exact answer from the JSON response
+            var answer = response.message.replace(/.*\n\n/,'');
+
+            // Display the answer in the text area
+            $('#result').val(answer);
+          },
+          error: function (xhr,textStatus,errorThrown) {
+            console.error('Error:',errorThrown);
+          }
+        });
+      });
+
+      // Handle close button click
+      $('#closeButton').click(function () {
+        window.close(); // Close the window
+      });
+
+      // Handle copy button click
+      $('#copyButton').click(function () {
+        var result = $('#result').get(0);
+        result.select();
+        document.execCommand("copy");
+
+        // Show Bootstrap modal with copy message
+        $('<div class="modal" tabindex="-1" role="dialog">' +
+          '<div class="modal-dialog" role="document">' +
+          '<div class="modal-content">' +
+          '<div class="modal-body">' +
+          'Result copied to clipboard!' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>').modal('show');
+      });
+      //handel close button request
+
+      // Handle Enter key press
+      $('#question').keypress(function (e) {
+        if (e.which === 13) {
+          e.preventDefault();
+          $('#result').attr('placeholder','Fetching result...');
+          $('#myForm').submit();
+        }
+      });
     });
-  });
-  
-  // Handle close button click
-  $('#closeButton').click(function() {
-    window.close(); // Close the window
-  });
-  
-  // Handle copy button click
-  $('#copyButton').click(function() {
-    var result = $('#result').get(0);
-    result.select();
-    document.execCommand("copy");
-
-    // Show Bootstrap modal with copy message
-    $('<div class="modal" tabindex="-1" role="dialog">' +
-      '<div class="modal-dialog" role="document">' +
-      '<div class="modal-content">' +
-      '<div class="modal-body">' +
-      'Result copied to clipboard!' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
-      '</div>').modal('show');
-  });
-  //handel close button request
-  
-  // Handle Enter key press
-  $('#question').keypress(function(e) {
-    if (e.which === 13) {
-      e.preventDefault();
-      $('#result').attr('placeholder', 'Fetching result...');
-      $('#myForm').submit();
-    }
-  });
-});
 
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = window.location.search.substring(1),
+    var getUrlParameter = function getUrlParameter(sParam) {
+      var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
         i;
 
-    for (i = 0; i < sURLVariables.length; i++) {
+      for (i = 0; i < sURLVariables.length; i++) {
         sParameterName = sURLVariables[i].split('=');
 
         if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
         }
-    }
-    return false;
-};
+      }
+      return false;
+    };
 
   </script>
 </body>
+
 </html>
