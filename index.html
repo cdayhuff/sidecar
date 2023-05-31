@@ -168,7 +168,9 @@
 
         // Make the AJAX request to the IBM Cloud Function
         $.ajax({
-          url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2/my-function',
+         
+          url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2Lauren/my-function',  //laurens
+         // url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2/my-function',
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({ question: question,qualifier: qualifier }),
