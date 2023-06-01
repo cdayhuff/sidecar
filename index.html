@@ -166,11 +166,11 @@
         // Display the "Fetching result..." placeholder
         $('#result').attr('placeholder','Fetching result...');
 
-        // Make the AJAX request to the IBM Cloud Function
+        // Make the AJAX request to the IBM Cloud Function passing the qualifier and question
         $.ajax({
          
-          url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2Vince',  //laurens
-         // corey url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2/my-function',
+          // vince url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2Vince',  //laurens
+         url: 'https://us-south.functions.appdomain.cloud/api/v1/web/0677df3f-3fca-428b-b0fc-46dbc2fd95d5/default/GPT2/my-function',  //corey url
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({ question: question,qualifier: qualifier }),
